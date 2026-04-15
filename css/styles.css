@@ -57,3 +57,14 @@ button {
 footer {
   background-color: #bcccdc;
 }
+
+@media (max-width: 768px) {
+  body {
+    font-size: 14px;
+  }
+
+  nav a {
+    display: block;
+    margin-bottom: 10px;
+  }
+}
