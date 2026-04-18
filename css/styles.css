@@ -13,6 +13,7 @@ footer {
 }
 
 header {
+  text-align: center;
   background-color: #1e3a5f;    
   color: white;
 }
@@ -68,4 +69,18 @@ footer {
     display: block;
     margin-bottom: 10px;
   }
+}
+
+.logo-link {
+    text-decoration: none;
+    color: inherit;
+    cursor: pointer;
+}
+
+.logo-link:hover {
+    opacity: 0.8;
+}
+
+.text-center {
+  text-align: center;
 }
