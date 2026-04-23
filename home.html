@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Home - QuestBoard</title>
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+  <header>
+    <h1>
+      <a href="index.html" class="logo-link">QuestBoard</a>
+    </h1>
+    <p class="text-center">Projektübersicht</p>
+  </header>
+
+  <nav>
+    <a href="home.html">Home</a>
+    <a href="info.html">Info</a>
+    <a href="login.html">Logout</a>
+  </nav>
+
+  <main>
+    <section class="card">
+      <h2>Alle Projekte</h2>
+      <div class="project-list">
+        <div class="project-card">
+          <h3><a href="project.html">Website Redesign</a></h3>
+          <p>Status: Aktiv</p>
+          <p>Fortschritt: 65%</p>
+        </div>
+
+        <div class="project-card">
+          <h3><a href="project.html">Marketing Campaign</a></h3>
+          <p>Status: Aktiv</p>
+          <p>Fortschritt: 40%</p>
+        </div>
+
+        <div class="project-card">
+          <h3><a href="project.html">App Prototype</a></h3>
+          <p>Status: Geplant</p>
+          <p>Fortschritt: 15%</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>Neues Projekt erstellen</h2>
+      <form>
+        <label for="project-name">Projektname</label>
+        <input type="text" id="project-name" name="project-name" />
+
+        <label for="project-status">Status</label>
+        <select id="project-status" name="project-status">
+          <option value="active">Aktiv</option>
+          <option value="planned">Geplant</option>
+          <option value="done">Abgeschlossen</option>
+        </select>
+
+        <button type="submit">Projekt erstellen</button>
+      </form>
+    </section>
+
+    <section class="card">
+      <h2>Globales Leaderboard</h2>
+      <ol>
+        <li><a href="employee.html">Max Mustermann</a> – 240 XP</li>
+        <li><a href="employee.html">Anna Schmidt</a> – 210 XP</li>
+        <li><a href="employee.html">Lena Fischer</a> – 180 XP</li>
+      </ol>
+    </section>
+  </main>
+
+  <footer>
+    <p>QuestBoard</p>
+  </footer>
+</body>
+</html>

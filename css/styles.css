@@ -84,3 +84,55 @@ footer {
 .text-center {
   text-align: center;
 }
+
+
+.card {
+  background-color: white;
+  padding: 20px;
+  margin-bottom: 20px;
+  border-radius: 8px;
+}
+
+/* --- Projektliste Grid --- */
+.project-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 15px;
+}
+
+.project-card {
+  background-color: #e9f1f7;
+  padding: 15px;
+  border-radius: 6px;
+}
+
+.project-card a {
+  text-decoration: none;
+  color: #102a43;
+}
+
+/* --- Button als Link (für Login etc.) --- */
+.button-link {
+  display: inline-block;
+  padding: 10px;
+  background-color: #1e3a5f;
+  color: white;
+  text-decoration: none;
+  border-radius: 6px;
+  text-align: center;
+}
+
+/* --- Leaderboard --- */
+ol {
+  padding-left: 20px;
+}
+
+ol li {
+  margin-bottom: 8px;
+}
+
+/* --- Hover Effekte  --- */
+.project-card:hover {
+  background-color: #d9e2ec;
+  cursor: pointer;
+}

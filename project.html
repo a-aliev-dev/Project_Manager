@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Projekt - QuestBoard</title>
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+  <header>
+    <h1>
+      <a href="index.html" class="logo-link">QuestBoard</a>
+    </h1>
+    <p class="text-center">Projektansicht</p>
+  </header>
+
+  <nav>
+    <a href="home.html">Home</a>
+    <a href="info.html">Info</a>
+    <a href="login.html">Logout</a>
+  </nav>
+
+  <main>
+    <section class="card">
+      <h2>Website Redesign</h2>
+      <p><strong>Status:</strong> Aktiv</p>
+      <p><strong>Fortschritt:</strong> 65%</p>
+      <p><strong>Beschreibung:</strong> Überarbeitung der Firmenwebsite mit modernem Design und besserer Nutzerführung.</p>
+    </section>
+
+    <section class="card">
+      <h2>Aktuelle Tasks</h2>
+      <ul class="task-list">
+        <li><a href="task.html">Landingpage gestalten</a> – In Bearbeitung</li>
+        <li><a href="task.html">Farbschema definieren</a> – Offen</li>
+        <li><a href="task.html">Navigation überarbeiten</a> – In Bearbeitung</li>
+      </ul>
+    </section>
+
+    <section class="card">
+      <h2>Erledigte Tasks</h2>
+      <ul class="task-list">
+        <li><a href="task.html">Projektplanung</a> – Erledigt</li>
+        <li><a href="task.html">Zielgruppenanalyse</a> – Erledigt</li>
+      </ul>
+    </section>
+
+    <section class="card">
+      <h2>Neue Task erstellen</h2>
+      <form>
+        <label for="task-title">Taskname</label>
+        <input type="text" id="task-title" name="task-title" />
+
+        <label for="task-priority">Priorität</label>
+        <select id="task-priority" name="task-priority">
+          <option value="low">Low</option>
+          <option value="medium">Medium</option>
+          <option value="high">High</option>
+        </select>
+
+        <label for="task-person">Zuständige Person</label>
+        <input type="text" id="task-person" name="task-person" />
+
+        <button type="submit">Task erstellen</button>
+      </form>
+    </section>
+
+    <section class="card">
+      <h2>Projekt-Leaderboard</h2>
+      <ol>
+        <li><a href="employee.html">Anna Schmidt</a> – 8 erledigte Tasks</li>
+        <li><a href="employee.html">Max Mustermann</a> – 6 erledigte Tasks</li>
+        <li><a href="employee.html">Lena Fischer</a> – 4 erledigte Tasks</li>
+      </ol>
+    </section>
+  </main>
+
+  <footer>
+    <p>QuestBoard</p>
+  </footer>
+</body>
+</html>
