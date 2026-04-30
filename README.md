@@ -1,21 +1,25 @@
 # QuestBoard
 
-## Repository
-[Link zum Repository](https://github.com/a-aliev-dev/Project_Manager.git)
+**Team:**  
+Ali Aliev, Oleksii Kurov, Marin Corluka
 
-## Team
-- Ali Aliev – 315051
-- Oleksii Kurov – 315264
-- Marin Corluka - 315345
+**Repository:**  
+TODO: Repository-Link hier einfügen
+
+---
 
 ## Projektidee
-QuestBoard ist eine gamifizierte Projektmanagement-Webanwendung für Unternehmen. Die Anwendung verbindet Aufgabenverwaltung mit Spielelementen wie XP, Levels und Achievements, um Motivation, Transparenz und Produktivität in Teams zu steigern.
 
-## Kriterien-Zuordnung
+QuestBoard ist eine gamifizierte Projektmanagement-Webanwendung. Projekte und Aufgaben werden als Quests dargestellt. Nutzer können Projekte anlegen, Fortschritte erhöhen und Teamleistung über XP und ein Leaderboard sichtbar machen.
 
-| Kriterium                       | Datei          |
-|---------------------------------|----------------|
-| Semantische HTML-Struktur       | index.html     |
-| Formular mit Labels             | index.html     |
-| CSS-Gestaltung                  | css/styles.css |
-| Media Query / Responsive Design | css/styles.css |
+Der statische HTML/CSS-Prototyp aus M1 wurde für M2 in eine React- und TypeScript-App mit Vite überführt.
+
+---
+
+## Setup
+
+Zum Starten der Anwendung:
+
+```bash
+npm install
+npm run dev
