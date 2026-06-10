@@ -26,3 +26,18 @@ npm run dev
 ```
 
 Die App läuft danach lokal unter http://localhost:5173/.
+
+---
+
+## Kriterien-Zuordnung M2
+
+| Kriterium | Datei | Hinweis |
+|---|---|---|
+| npm + Vite | package.json, vite.config.ts | Projekt wurde mit Vite erstellt |
+| React + TypeScript | src/App.tsx, src/types.ts | React-Komponenten mit TypeScript |
+| TypeScript aktiv genutzt | src/types.ts | Eigene Types/Interfaces für Projektdaten |
+| Komponentenzerlegung | src/components/ | Mehrere wiederverwendbare Komponenten |
+| Props-Übergabe | src/App.tsx | Daten und Funktionen werden per Props weitergegeben |
+| useState | src/App.tsx | Zustand für Projekte, Fortschritt oder Formular |
+| useEffect | src/App.tsx | Wird für Laden/Speichern oder Initialisierung genutzt |
+| Durchgängige Nutzeraktion | src/components/ | Projekt erstellen oder Fortschritt erhöhen verändert die UI |
