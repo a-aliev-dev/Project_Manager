@@ -36,7 +36,7 @@ Die App läuft danach lokal unter http://localhost:5173/.
 | npm + Vite | package.json, vite.config.ts | Projekt wurde mit Vite erstellt |
 | React + TypeScript | src/App.tsx, src/types.ts | React-Komponenten mit TypeScript |
 | TypeScript aktiv genutzt | src/types.ts | Eigene Types/Interfaces für Projektdaten |
-| Komponentenzerlegung | src/components/ | Mehrere wiederverwendbare Komponenten |
+| Komponentenzerlegung | src/components/ | AddProjectForm, DashboardStats, ProjectList, ProjectCard, Leaderboard, ProjectChart |
 | Props-Übergabe | src/App.tsx | Daten und Funktionen werden per Props weitergegeben |
 | useState | src/App.tsx | Zustand für Projekte, Fortschritt oder Formular |
 | useEffect | src/App.tsx | Wird für Laden/Speichern oder Initialisierung genutzt |
@@ -86,6 +86,7 @@ Die Anwendung ist in mehrere wiederverwendbare Komponenten zerlegt:
 - Leaderboard
 - ProjectList
 - ProjectCard
+- ProjectChart
 - TaskList
 - TaskCard
 
@@ -130,3 +131,8 @@ Die App enthält echte Nutzerinteraktionen ohne Seitenreload:
 ### - Initiale Daten *(src/data/initialProjects.ts)*
 
 Initiale Projektdaten und Leaderboard-Einträge sind typisiert ausgelagert.
+
+### - Projektverteilung Chart *(src/components/ProjectChart.tsx)*
+
+Die Projektverteilung wird mit einer einfachen Balkengrafik angezeigt. Dabei werden geplante, aktive und abgeschlossene Projekte gezählt und visuell dargestellt.
+
