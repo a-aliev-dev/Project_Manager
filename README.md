@@ -23,3 +23,6 @@ Zum Starten der Anwendung:
 ```bash
 npm install
 npm run dev
+```
+
+Die App läuft danach lokal unter http://localhost:5173/.
