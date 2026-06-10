@@ -368,4 +368,32 @@
   .project-card__top {
     flex-direction: column;
   }
+
+}
+.kanban-board {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  align-items: start;
+}
+
+.kanban-column {
+  background: #f3f4f6;
+  padding: 16px;
+  border-radius: 20px;
+}
+
+.kanban-column h3 {
+  margin-bottom: 16px;
+  color: #111827;
+}
+
+.kanban-column .project-card {
+  margin-bottom: 16px;
+}
+
+@media (max-width: 900px) {
+  .kanban-board {
+    grid-template-columns: 1fr;
+  }
 }
