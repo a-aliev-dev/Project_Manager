@@ -6,9 +6,9 @@ interface ProjectCardProps {
 }
 
 const statusLabels: Record<Project["status"], string> = {
-  active: "Aktiv",
-  planned: "Geplant",
-  done: "Abgeschlossen",
+  planned: "🟡 Geplant",
+  active: "🔵 Aktiv",
+  done: "✅ Fertig",
 };
 
 export function ProjectCard({ project, onAdvanceProject }: ProjectCardProps) {
@@ -22,7 +22,7 @@ export function ProjectCard({ project, onAdvanceProject }: ProjectCardProps) {
           <h3>{project.name}</h3>
         </div>
 
-        <span className="project-card__xp">{project.xpReward} XP</span>
+        <span className="project-card__xp">⭐ {project.xpReward} XP</span>
       </div>
 
       <div className="progress">
