@@ -1,3 +1,4 @@
+import { ProjectChart } from "./components/ProjectChart";
 import { useEffect, useState } from "react";
 import "./App.css";
 import { AddProjectForm } from "./components/AddProjectForm";
@@ -100,6 +101,12 @@ function App() {
         activeProjects={activeProjects}
         completedProjects={completedProjects}
         averageProgress={averageProgress}
+      />
+
+      <ProjectChart
+        planned={projects.filter((project) => project.status === "planned").length}
+        active={activeProjects}
+        done={completedProjects}
       />
 
       <section id="projects" className="content-section">
