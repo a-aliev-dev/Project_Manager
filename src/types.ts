@@ -4,6 +4,7 @@ export type TaskPriority = "low" | "medium" | "high";
 
 export interface QuestTask {
   id: number;
+  projectId: number;
   title: string;
   description: string;
   category: string;

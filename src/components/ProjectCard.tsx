@@ -2,27 +2,38 @@ import type { Project } from "../types";
 
 interface ProjectCardProps {
   project: Project;
+  isSelected: boolean;
+  onSelectProject: (id: number) => void;
   onAdvanceProject: (id: number) => void;
 }
 
 const statusLabels: Record<Project["status"], string> = {
-  planned: "🟡 Geplant",
-  active: "🔵 Aktiv",
-  done: "✅ Fertig",
+  active: "Aktiv",
+  planned: "Geplant",
+  done: "Abgeschlossen",
 };
 
-export function ProjectCard({ project, onAdvanceProject }: ProjectCardProps) {
+export function ProjectCard({
+  project,
+  isSelected,
+  onSelectProject,
+  onAdvanceProject,
+}: ProjectCardProps) {
   const isDone = project.status === "done";
 
   return (
-    <article className={`project-card ${isDone ? "project-card--done" : ""}`}>
+    <article
+      className={`project-card ${isDone ? "project-card--done" : ""} ${
+        isSelected ? "project-card--selected" : ""
+      }`}
+    >
       <div className="project-card__top">
         <div>
           <p className="project-card__status">{statusLabels[project.status]}</p>
           <h3>{project.name}</h3>
         </div>
 
-        <span className="project-card__xp">⭐ {project.xpReward} XP</span>
+        <span className="project-card__xp">{project.xpReward} XP</span>
       </div>
 
       <div className="progress">
@@ -39,13 +50,24 @@ export function ProjectCard({ project, onAdvanceProject }: ProjectCardProps) {
         </div>
       </div>
 
-      <button
-        className="secondary-button"
-        onClick={() => onAdvanceProject(project.id)}
-        disabled={isDone}
-      >
-        {isDone ? "Projekt abgeschlossen" : "Fortschritt erhöhen"}
-      </button>
+      <div className="project-card__actions">
+        <button
+          className="secondary-button"
+          type="button"
+          onClick={() => onSelectProject(project.id)}
+        >
+          {isSelected ? "Tasks werden angezeigt" : "Tasks anzeigen"}
+        </button>
+
+        <button
+          className="secondary-button"
+          type="button"
+          onClick={() => onAdvanceProject(project.id)}
+          disabled={isDone}
+        >
+          {isDone ? "Projekt abgeschlossen" : "Fortschritt erhöhen"}
+        </button>
+      </div>
     </article>
   );
 }

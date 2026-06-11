@@ -24,6 +24,7 @@ export function TaskCard({ task, onCompleteTask }: TaskCardProps) {
     <article className={`task-card ${isDone ? "task-card--done" : ""}`}>
       <div className="task-card__header">
         <div>
+          <p className="task-card__status">{statusLabels[task.status]}</p>
           <h3>{task.title}</h3>
           <p>{task.description}</p>
         </div>
@@ -33,12 +34,12 @@ export function TaskCard({ task, onCompleteTask }: TaskCardProps) {
 
       <div className="task-card__meta">
         <span>Kategorie: {task.category}</span>
-        <span>Status: {statusLabels[task.status]}</span>
         <span>Priorität: {priorityLabels[task.priority]}</span>
       </div>
 
       <button
-        className="task-card__button"
+        className="secondary-button"
+        type="button"
         onClick={() => onCompleteTask(task.id)}
         disabled={isDone}
       >

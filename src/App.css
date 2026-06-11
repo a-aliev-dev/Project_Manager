@@ -434,3 +434,176 @@
 .chart-row strong {
   color: #0f172a;
 }
+
+/* Taskboard-Erweiterung */
+
+.project-board {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  align-items: start;
+}
+
+.project-column {
+  background: #f3f4f6;
+  padding: 16px;
+  border-radius: 20px;
+}
+
+.project-column__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.project-column__header h3 {
+  margin: 0;
+  color: #111827;
+}
+
+.project-column__header span {
+  display: grid;
+  place-items: center;
+  min-width: 34px;
+  height: 34px;
+  border-radius: 999px;
+  background: #dbeafe;
+  color: #1d4ed8;
+  font-weight: 900;
+}
+
+.project-column .project-card {
+  margin-bottom: 16px;
+}
+
+.project-card--selected {
+  border-color: #2563eb;
+  box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.14),
+    0 12px 32px rgba(15, 23, 42, 0.08);
+}
+
+.project-card__actions {
+  display: grid;
+  gap: 10px;
+}
+
+.project-card__actions .secondary-button {
+  width: 100%;
+}
+
+/* Taskbereich */
+
+.task-list {
+  display: grid;
+  gap: 16px;
+}
+
+.task-card {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  padding: 24px;
+  border: 1px solid #e2e8f0;
+  border-radius: 24px;
+  background: white;
+  box-shadow: 0 12px 32px rgba(15, 23, 42, 0.08);
+}
+
+.task-card--done {
+  background: #f0fdf4;
+  border-color: #bbf7d0;
+}
+
+.task-card__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 18px;
+}
+
+.task-card__status {
+  width: fit-content;
+  margin: 0 0 10px;
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: #eef2ff;
+  color: #3730a3;
+  font-size: 0.85rem;
+  font-weight: 800;
+}
+
+.task-card h3 {
+  margin: 0 0 8px;
+  color: #0f172a;
+  font-size: 1.25rem;
+  line-height: 1.2;
+}
+
+.task-card p {
+  margin: 0;
+  color: #475569;
+  line-height: 1.6;
+}
+
+.task-card__xp {
+  padding: 8px 12px;
+  border-radius: 999px;
+  background: #dbeafe;
+  color: #1d4ed8;
+  font-weight: 900;
+  white-space: nowrap;
+}
+
+.task-card__meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  color: #475569;
+  font-size: 0.95rem;
+  font-weight: 700;
+}
+
+.task-card .secondary-button {
+  width: fit-content;
+}
+
+/* Task-Formular passend zum Projektformular */
+
+.task-form {
+  display: grid;
+  gap: 18px;
+}
+
+.form-field textarea {
+  width: 100%;
+  border: 1px solid #cbd5e1;
+  border-radius: 14px;
+  padding: 13px 14px;
+  background: white;
+  color: #0f172a;
+  outline: none;
+  resize: vertical;
+  font: inherit;
+}
+
+.form-field textarea:focus {
+  border-color: #2563eb;
+  box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.12);
+}
+
+@media (max-width: 900px) {
+  .project-board {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 620px) {
+  .task-card__header {
+    flex-direction: column;
+  }
+
+  .task-card .secondary-button {
+    width: 100%;
+  }
+}
