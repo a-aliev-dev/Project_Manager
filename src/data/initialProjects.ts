@@ -7,6 +7,7 @@ export const initialProjects: Project[] = [
     status: "active",
     progress: 65,
     xpReward: 120,
+    memberIds: [1, 2],
   },
   {
     id: 2,
@@ -14,6 +15,7 @@ export const initialProjects: Project[] = [
     status: "active",
     progress: 40,
     xpReward: 90,
+    memberIds: [2, 3],
   },
   {
     id: 3,
@@ -21,6 +23,7 @@ export const initialProjects: Project[] = [
     status: "planned",
     progress: 15,
     xpReward: 70,
+    memberIds: [],
   },
 ];
 

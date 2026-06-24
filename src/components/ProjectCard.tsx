@@ -3,8 +3,7 @@ import type { Project } from "../types";
 interface ProjectCardProps {
   project: Project;
   isSelected: boolean;
-  onSelectProject: (id: number) => void;
-  onAdvanceProject: (id: number) => void;
+  onOpenProject: (id: number) => void;
 }
 
 const statusLabels: Record<Project["status"], string> = {
@@ -16,8 +15,7 @@ const statusLabels: Record<Project["status"], string> = {
 export function ProjectCard({
   project,
   isSelected,
-  onSelectProject,
-  onAdvanceProject,
+  onOpenProject,
 }: ProjectCardProps) {
   const isDone = project.status === "done";
 
@@ -50,22 +48,17 @@ export function ProjectCard({
         </div>
       </div>
 
+      <div className="project-card__meta">
+        <span>{project.memberIds.length} Mitglieder</span>
+      </div>
+
       <div className="project-card__actions">
         <button
           className="secondary-button"
           type="button"
-          onClick={() => onSelectProject(project.id)}
+          onClick={() => onOpenProject(project.id)}
         >
-          {isSelected ? "Tasks werden angezeigt" : "Tasks anzeigen"}
-        </button>
-
-        <button
-          className="secondary-button"
-          type="button"
-          onClick={() => onAdvanceProject(project.id)}
-          disabled={isDone}
-        >
-          {isDone ? "Projekt abgeschlossen" : "Fortschritt erhöhen"}
+          Projekt öffnen
         </button>
       </div>
     </article>

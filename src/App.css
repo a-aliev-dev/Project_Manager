@@ -138,6 +138,7 @@
   display: flex;
   flex-direction: column;
   gap: 22px;
+  min-height: 360px;
   padding: 24px;
   border: 1px solid #e2e8f0;
   border-radius: 24px;
@@ -484,6 +485,7 @@
 }
 
 .project-card__actions {
+  margin-top: auto;
   display: grid;
   gap: 10px;
 }
@@ -605,5 +607,170 @@
 
   .task-card .secondary-button {
     width: 100%;
+  }
+}
+.nav-button {
+  padding: 10px 14px;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 999px;
+  background: transparent;
+  color: #dbeafe;
+  font: inherit;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.nav-button:hover {
+  background: rgba(255, 255, 255, 0.12);
+  color: white;
+}
+
+.project-hero {
+  margin-bottom: 28px;
+}
+
+.detail-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 28px;
+  margin-bottom: 28px;
+}
+
+.project-detail-stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 22px;
+}
+
+.project-detail-stats span,
+.project-card__meta span {
+  width: fit-content;
+  padding: 8px 12px;
+  border-radius: 999px;
+  background: #eef2ff;
+  color: #3730a3;
+  font-weight: 800;
+  font-size: 0.9rem;
+}
+
+.member-list {
+  display: grid;
+  gap: 12px;
+}
+
+.member-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 16px;
+  border-radius: 16px;
+  background: white;
+  color: #0f172a;
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.06);
+}
+
+.member-card span {
+  color: #64748b;
+  font-weight: 800;
+}
+
+.member-actions {
+  display: grid;
+  gap: 12px;
+  margin-top: 18px;
+}
+
+.member-hint {
+  margin: 0;
+  color: #475569;
+  line-height: 1.6;
+}
+
+.task-card__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.task-card__actions .secondary-button {
+  width: fit-content;
+}
+
+@media (max-width: 900px) {
+  .detail-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 620px) {
+  .member-card {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .task-card__actions .secondary-button {
+    width: 100%;
+  }
+}
+
+.project-status-board {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18px;
+  align-items: start;
+}
+
+.project-status-column {
+  padding: 18px;
+  border-radius: 24px;
+  background: #eef2f7;
+}
+
+.project-status-column__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.project-status-column__header h3 {
+  margin: 0;
+  color: #0f172a;
+  font-size: 1.2rem;
+}
+
+.project-status-column__header span {
+  display: grid;
+  place-items: center;
+  min-width: 34px;
+  height: 34px;
+  padding: 0 10px;
+  border-radius: 999px;
+  background: #dbeafe;
+  color: #1d4ed8;
+  font-weight: 900;
+}
+
+.project-status-column__list {
+  display: grid;
+  gap: 16px;
+}
+
+.project-status-column .project-card {
+  min-height: 0;
+}
+
+.project-status-column .empty-state {
+  padding: 18px;
+  font-size: 0.95rem;
+}
+
+@media (max-width: 1000px) {
+  .project-status-board {
+    grid-template-columns: 1fr;
   }
 }

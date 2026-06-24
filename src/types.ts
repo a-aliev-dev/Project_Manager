@@ -11,6 +11,7 @@ export interface QuestTask {
   status: TaskStatus;
   priority: TaskPriority;
   xp: number;
+  assignedToMemberId?: number;
 }
 
 export type ProjectStatus = "active" | "planned" | "done";
@@ -21,6 +22,7 @@ export interface Project {
   status: ProjectStatus;
   progress: number;
   xpReward: number;
+  memberIds: number[];
 }
 
 export interface LeaderboardEntry {

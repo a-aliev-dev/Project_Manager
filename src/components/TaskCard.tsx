@@ -1,7 +1,10 @@
-import type { QuestTask } from "../types";
+import type { LeaderboardEntry, QuestTask } from "../types";
 
 interface TaskCardProps {
   task: QuestTask;
+  members: LeaderboardEntry[];
+  currentUserId: number;
+  onAssignTask: (id: number) => void;
   onCompleteTask: (id: number) => void;
 }
 
@@ -17,8 +20,20 @@ const priorityLabels: Record<QuestTask["priority"], string> = {
   high: "Hoch",
 };
 
-export function TaskCard({ task, onCompleteTask }: TaskCardProps) {
+export function TaskCard({
+  task,
+  members,
+  currentUserId,
+  onAssignTask,
+  onCompleteTask,
+}: TaskCardProps) {
   const isDone = task.status === "done";
+  const isAssigned = task.assignedToMemberId !== undefined;
+  const isAssignedToCurrentUser = task.assignedToMemberId === currentUserId;
+
+  const assignedMember = members.find(
+    (member) => member.id === task.assignedToMemberId
+  );
 
   return (
     <article className={`task-card ${isDone ? "task-card--done" : ""}`}>
@@ -35,16 +50,42 @@ export function TaskCard({ task, onCompleteTask }: TaskCardProps) {
       <div className="task-card__meta">
         <span>Kategorie: {task.category}</span>
         <span>Priorität: {priorityLabels[task.priority]}</span>
+        <span>
+          Zuständig:{" "}
+          {assignedMember ? assignedMember.name : "Noch niemand eingetragen"}
+        </span>
       </div>
 
-      <button
-        className="secondary-button"
-        type="button"
-        onClick={() => onCompleteTask(task.id)}
-        disabled={isDone}
-      >
-        {isDone ? "Quest erledigt" : "Quest abschließen"}
-      </button>
+      <div className="task-card__actions">
+        {!isAssigned && !isDone && (
+          <button
+            className="secondary-button"
+            type="button"
+            onClick={() => onAssignTask(task.id)}
+          >
+            Quest übernehmen
+          </button>
+        )}
+
+        {isAssigned && !isDone && (
+          <button
+            className="secondary-button"
+            type="button"
+            onClick={() => onCompleteTask(task.id)}
+            disabled={!isAssignedToCurrentUser}
+          >
+            {isAssignedToCurrentUser
+              ? "Quest abschließen"
+              : "Von anderem Mitglied übernommen"}
+          </button>
+        )}
+
+        {isDone && (
+          <button className="secondary-button" type="button" disabled>
+            Quest erledigt
+          </button>
+        )}
+      </div>
     </article>
   );
 }

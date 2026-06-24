@@ -10,6 +10,7 @@ export const initialTasks: QuestTask[] = [
     status: "done",
     priority: "medium",
     xp: 50,
+    assignedToMemberId: 1,
   },
   {
     id: 2,
@@ -19,7 +20,8 @@ export const initialTasks: QuestTask[] = [
     category: "Frontend",
     status: "in-progress",
     priority: "high",
-    xp: 70
+    xp: 70,
+    assignedToMemberId: 2,
   },
   {
     id: 3,
@@ -40,6 +42,7 @@ export const initialTasks: QuestTask[] = [
     status: "done",
     priority: "medium",
     xp: 50,
+    assignedToMemberId: 2,
   },
   {
     id: 5,

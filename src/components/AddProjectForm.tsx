@@ -2,7 +2,9 @@ import { useState } from "react";
 import type { Project, ProjectStatus } from "../types";
 
 interface AddProjectFormProps {
-  onAddProject: (project: Omit<Project, "id" | "progress" | "xpReward">) => void;
+  onAddProject: (
+    project: Omit<Project, "id" | "progress" | "xpReward" | "memberIds">
+  ) => void;
 }
 
 export function AddProjectForm({ onAddProject }: AddProjectFormProps) {

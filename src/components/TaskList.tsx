@@ -1,12 +1,21 @@
-import type { QuestTask } from "../types";
+import type { LeaderboardEntry, QuestTask } from "../types";
 import { TaskCard } from "./TaskCard";
 
 interface TaskListProps {
   tasks: QuestTask[];
+  members: LeaderboardEntry[];
+  currentUserId: number;
+  onAssignTask: (id: number) => void;
   onCompleteTask: (id: number) => void;
 }
 
-export function TaskList({ tasks, onCompleteTask }: TaskListProps) {
+export function TaskList({
+  tasks,
+  members,
+  currentUserId,
+  onAssignTask,
+  onCompleteTask,
+}: TaskListProps) {
   if (tasks.length === 0) {
     return (
       <section className="task-list">
@@ -20,7 +29,14 @@ export function TaskList({ tasks, onCompleteTask }: TaskListProps) {
   return (
     <section className="task-list">
       {tasks.map((task) => (
-        <TaskCard key={task.id} task={task} onCompleteTask={onCompleteTask} />
+        <TaskCard
+          key={task.id}
+          task={task}
+          members={members}
+          currentUserId={currentUserId}
+          onAssignTask={onAssignTask}
+          onCompleteTask={onCompleteTask}
+        />
       ))}
     </section>
   );
