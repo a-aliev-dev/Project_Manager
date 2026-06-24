@@ -28,7 +28,7 @@ export function TaskCard({
   onCompleteTask,
 }: TaskCardProps) {
   const isDone = task.status === "done";
-  const isAssigned = task.assignedToMemberId !== undefined;
+  const isAssigned = task.assignedToMemberId != null;
   const isAssignedToCurrentUser = task.assignedToMemberId === currentUserId;
 
   const assignedMember = members.find(
@@ -57,26 +57,23 @@ export function TaskCard({
       </div>
 
       <div className="task-card__actions">
-        {!isAssigned && !isDone && (
+        {!isDone && !isAssignedToCurrentUser && (
           <button
             className="secondary-button"
             type="button"
             onClick={() => onAssignTask(task.id)}
           >
-            Quest übernehmen
+            {isAssigned ? "Quest übernehmen" : "Quest übernehmen"}
           </button>
         )}
 
-        {isAssigned && !isDone && (
+        {!isDone && isAssignedToCurrentUser && (
           <button
             className="secondary-button"
             type="button"
             onClick={() => onCompleteTask(task.id)}
-            disabled={!isAssignedToCurrentUser}
           >
-            {isAssignedToCurrentUser
-              ? "Quest abschließen"
-              : "Von anderem Mitglied übernommen"}
+            Quest abschließen
           </button>
         )}
 

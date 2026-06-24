@@ -774,3 +774,27 @@
     grid-template-columns: 1fr;
   }
 }
+.error-state {
+  padding: 18px;
+  border-radius: 18px;
+  background: #fee2e2;
+  color: #991b1b;
+  font-weight: 800;
+  text-align: center;
+}
+
+.auth-section {
+  max-width: 620px;
+  margin: 0 auto;
+}
+
+.auth-switch {
+  margin-top: 18px;
+}
+
+.link-button {
+  display: inline-block;
+  margin-top: 18px;
+  text-decoration: none;
+  text-align: center;
+}
