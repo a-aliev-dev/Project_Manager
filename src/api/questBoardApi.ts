@@ -138,3 +138,7 @@ export function register(data: {
     body: JSON.stringify(data),
   });
 }
+
+export function fetchLeaderboard() {
+  return request<LeaderboardEntry[]>("/leaderboard");
+}

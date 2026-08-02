@@ -1,6 +1,10 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { createProject, fetchProjects } from "../api/questBoardApi";
+import {
+  createProject,
+  fetchLeaderboard,
+  fetchProjects,
+} from "../api/questBoardApi";
 import { AddProjectForm } from "../components/AddProjectForm";
 import { DashboardStats } from "../components/DashboardStats";
 import { Leaderboard } from "../components/Leaderboard";
@@ -8,29 +12,34 @@ import { ProjectList } from "../components/ProjectList";
 import { useAuth } from "../context/AuthContext";
 import type { LeaderboardEntry, Project } from "../types";
 
-const fallbackLeaderboardEntries: LeaderboardEntry[] = [
-  { id: 1, name: "Max Mustermann", xp: 240 },
-  { id: 2, name: "Anna Schmidt", xp: 210 },
-  { id: 3, name: "Lena Fischer", xp: 180 },
-];
-
 export function HomePage() {
   const navigate = useNavigate();
   const { user, token, isAuthenticated, logout } = useAuth();
 
   const [projects, setProjects] = useState<Project[]>([]);
+  const [leaderboardEntries, setLeaderboardEntries] = useState<
+    LeaderboardEntry[]
+  >([]);
   const [isLoading, setIsLoading] = useState(true);
   const [errorMessage, setErrorMessage] = useState("");
 
-  async function loadProjects() {
+  async function loadDashboard() {
     try {
       setIsLoading(true);
       setErrorMessage("");
-      const loadedProjects = await fetchProjects();
+
+      const [loadedProjects, loadedLeaderboard] = await Promise.all([
+        fetchProjects(),
+        fetchLeaderboard(),
+      ]);
+
       setProjects(loadedProjects);
+      setLeaderboardEntries(loadedLeaderboard);
     } catch (error) {
       setErrorMessage(
-        error instanceof Error ? error.message : "Projekte konnten nicht geladen werden."
+        error instanceof Error
+          ? error.message
+          : "Dashboard konnte nicht geladen werden."
       );
     } finally {
       setIsLoading(false);
@@ -38,7 +47,7 @@ export function HomePage() {
   }
 
   useEffect(() => {
-    loadProjects();
+    void loadDashboard();
   }, []);
 
   const activeProjects = projects.filter(
@@ -57,22 +66,6 @@ export function HomePage() {
             projects.length
         );
 
-  const leaderboardEntries = useMemo(() => {
-    if (!user) {
-      return fallbackLeaderboardEntries;
-    }
-
-    const exists = fallbackLeaderboardEntries.some((entry) => entry.id === user.id);
-
-    if (exists) {
-      return fallbackLeaderboardEntries.map((entry) =>
-        entry.id === user.id ? { ...entry, xp: user.xp } : entry
-      );
-    }
-
-    return [{ id: user.id, name: user.name, xp: user.xp }, ...fallbackLeaderboardEntries];
-  }, [user]);
-
   async function handleAddProject(
     projectData: Omit<Project, "id" | "progress" | "xpReward" | "memberIds">
   ) {
@@ -83,11 +76,18 @@ export function HomePage() {
 
     try {
       setErrorMessage("");
+
       const createdProject = await createProject(projectData, token);
-      setProjects((currentProjects) => [createdProject, ...currentProjects]);
+
+      setProjects((currentProjects) => [
+        createdProject,
+        ...currentProjects,
+      ]);
     } catch (error) {
       setErrorMessage(
-        error instanceof Error ? error.message : "Projekt konnte nicht erstellt werden."
+        error instanceof Error
+          ? error.message
+          : "Projekt konnte nicht erstellt werden."
       );
     }
   }
@@ -99,6 +99,7 @@ export function HomePage() {
           <Link to="/">Home</Link>
           <a href="#create-project">Neues Projekt</a>
           <a href="#leaderboard">Leaderboard</a>
+
           {isAuthenticated ? (
             <button className="nav-button" type="button" onClick={logout}>
               Logout
@@ -111,11 +112,17 @@ export function HomePage() {
         <div className="hero__content">
           <p className="hero__eyebrow">QuestBoard</p>
           <h1>Projektübersicht mit Gamification</h1>
+
           <p className="hero__text">
             Verwalte Projekte, öffne Projektquests und mache Teamleistung durch
             XP und Leaderboards sichtbar.
           </p>
-          {user && <p className="hero__text">Eingeloggt als {user.name}</p>}
+
+          {user && (
+            <p className="hero__text">
+              Eingeloggt als {user.name}
+            </p>
+          )}
         </div>
       </header>
 
@@ -132,8 +139,17 @@ export function HomePage() {
           <h2>Alle Projekte</h2>
         </div>
 
-        {isLoading && <p className="empty-state">Projekte werden geladen...</p>}
-        {errorMessage && <p className="error-state">{errorMessage}</p>}
+        {isLoading && (
+          <p className="empty-state">
+            Dashboard wird geladen...
+          </p>
+        )}
+
+        {errorMessage && (
+          <p className="error-state">
+            {errorMessage}
+          </p>
+        )}
 
         {!isLoading && !errorMessage && (
           <ProjectList

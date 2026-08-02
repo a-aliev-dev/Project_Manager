@@ -23,3 +23,7 @@ dist-ssr
 *.sln
 *.sw?
 .vite/ 
+.env
+server/db/*Kopie*.sqlite
+
+/src/generated/prisma

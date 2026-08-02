@@ -1,0 +1,62 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           Int    @id @default(autoincrement())
+  name         String
+  email        String @unique
+  passwordHash String @map("password_hash")
+  xp           Int    @default(0)
+
+  memberships  ProjectMember[]
+  assignedTasks Task[]
+
+  @@map("users")
+}
+
+model Project {
+  id       Int    @id @default(autoincrement())
+  name     String
+  status   String
+  progress Int    @default(0)
+  xpReward Int    @default(60) @map("xp_reward")
+
+  members ProjectMember[]
+  tasks   Task[]
+
+  @@map("projects")
+}
+
+model ProjectMember {
+  projectId Int @map("project_id")
+  userId    Int @map("user_id")
+
+  project Project @relation(fields: [projectId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@id([projectId, userId])
+  @@map("project_members")
+}
+
+model Task {
+  id               Int     @id @default(autoincrement())
+  projectId        Int     @map("project_id")
+  title            String
+  description      String
+  category         String
+  status           String
+  priority         String
+  xp               Int
+  assignedToUserId Int?    @map("assigned_to_user_id")
+
+  assignedToUser User?   @relation(fields: [assignedToUserId], references: [id], onUpdate: NoAction)
+  project        Project @relation(fields: [projectId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@map("tasks")
+}

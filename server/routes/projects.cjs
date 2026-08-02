@@ -1,72 +1,30 @@
 const express = require("express");
-const db = require("../db/database.cjs");
+const prisma = require("../db/prisma.cjs");
 const { requireAuth } = require("../middleware/auth.cjs");
 
 const router = express.Router();
 
-function getMembersForProject(projectId) {
-  return db
-    .prepare(
-      `
-      SELECT users.id, users.name, users.email, users.xp
-      FROM project_members
-      JOIN users ON users.id = project_members.user_id
-      WHERE project_members.project_id = ?
-      ORDER BY users.name
-    `
-    )
-    .all(projectId);
+function mapTask(task) {
+  return {
+    id: task.id,
+    projectId: task.projectId,
+    title: task.title,
+    description: task.description,
+    category: task.category,
+    status: task.status,
+    priority: task.priority,
+    xp: task.xp,
+    assignedToMemberId: task.assignedToUserId ?? undefined,
+  };
 }
 
-function getTasksForProject(projectId) {
-  return db
-    .prepare(
-      `
-      SELECT
-        id,
-        project_id AS projectId,
-        title,
-        description,
-        category,
-        status,
-        priority,
-        xp,
-        assigned_to_user_id AS assignedToMemberId
-      FROM tasks
-      WHERE project_id = ?
-      ORDER BY id DESC
-    `
-    )
-    .all(projectId)
-    .map((task) => ({
-      ...task,
-      assignedToMemberId: task.assignedToMemberId ?? undefined,
-    }));
-}
-
-function calculateProgress(projectId) {
-  const tasks = db
-    .prepare("SELECT status FROM tasks WHERE project_id = ?")
-    .all(projectId);
-
-  if (tasks.length === 0) {
-    return 0;
-  }
-
-  const doneTasks = tasks.filter((task) => task.status === "done").length;
-
-  return Math.round((doneTasks / tasks.length) * 100);
-}
-
-function updateProjectProgress(projectId) {
-  const progress = calculateProgress(projectId);
-  const status = progress === 100 ? "done" : progress > 0 ? "active" : "planned";
-
-  db.prepare("UPDATE projects SET progress = ?, status = ? WHERE id = ?").run(
-    progress,
-    status,
-    projectId
-  );
+function mapMember(member) {
+  return {
+    id: member.id,
+    name: member.name,
+    email: member.email,
+    xp: member.xp,
+  };
 }
 
 function mapProject(project) {
@@ -75,128 +33,305 @@ function mapProject(project) {
     name: project.name,
     status: project.status,
     progress: project.progress,
-    xpReward: project.xp_reward,
-    memberIds: getMembersForProject(project.id).map((member) => member.id),
+    xpReward: project.xpReward,
+    memberIds: project.members.map((membership) => membership.userId),
   };
 }
 
-router.get("/", (req, res) => {
-  const projects = db
-    .prepare(
-      `
-      SELECT id, name, status, progress, xp_reward
-      FROM projects
-      ORDER BY id DESC
-    `
-    )
-    .all()
-    .map(mapProject);
-
-  return res.json(projects);
-});
-
-router.get("/:id", (req, res) => {
-  const projectId = Number(req.params.id);
-
-  const project = db
-    .prepare(
-      `
-      SELECT id, name, status, progress, xp_reward
-      FROM projects
-      WHERE id = ?
-    `
-    )
-    .get(projectId);
-
-  if (!project) {
-    return res.status(404).json({ message: "Projekt nicht gefunden." });
-  }
-
-  return res.json({
-    project: mapProject(project),
-    tasks: getTasksForProject(projectId),
-    members: getMembersForProject(projectId),
+async function calculateProjectState(projectId, transaction = prisma) {
+  const tasks = await transaction.task.findMany({
+    where: {
+      projectId,
+    },
+    select: {
+      status: true,
+    },
   });
-});
 
-router.post("/", requireAuth, (req, res) => {
-  const { name, status } = req.body;
+  const progress =
+    tasks.length === 0
+      ? 0
+      : Math.round(
+          (tasks.filter((task) => task.status === "done").length /
+            tasks.length) *
+            100
+        );
 
-  if (!name || !status) {
-    return res.status(400).json({ message: "Name und Status sind Pflicht." });
+  const status =
+    progress === 100 ? "done" : progress > 0 ? "active" : "planned";
+
+  return {
+    progress,
+    status,
+  };
+}
+
+async function updateProjectProgress(projectId, transaction = prisma) {
+  const state = await calculateProjectState(projectId, transaction);
+
+  return transaction.project.update({
+    where: {
+      id: projectId,
+    },
+    data: state,
+  });
+}
+
+/**
+ * GET /api/projects
+ * Gibt alle Projekte einschließlich ihrer Mitglieder-IDs zurück.
+ */
+router.get("/", async (req, res) => {
+  try {
+    const projects = await prisma.project.findMany({
+      orderBy: {
+        id: "desc",
+      },
+      include: {
+        members: {
+          select: {
+            userId: true,
+          },
+        },
+      },
+    });
+
+    return res.json(projects.map(mapProject));
+  } catch (error) {
+    console.error("Fehler beim Laden der Projekte:", error);
+
+    return res.status(500).json({
+      message: "Projekte konnten nicht geladen werden.",
+    });
   }
-
-  const xpReward = status === "done" ? 120 : 60;
-  const progress = status === "done" ? 100 : 0;
-
-  const result = db
-    .prepare(
-      `
-      INSERT INTO projects (name, status, progress, xp_reward)
-      VALUES (?, ?, ?, ?)
-    `
-    )
-    .run(name, status, progress, xpReward);
-
-  db.prepare(
-    "INSERT INTO project_members (project_id, user_id) VALUES (?, ?)"
-  ).run(result.lastInsertRowid, req.user.id);
-
-  const project = db
-    .prepare(
-      `
-      SELECT id, name, status, progress, xp_reward
-      FROM projects
-      WHERE id = ?
-    `
-    )
-    .get(result.lastInsertRowid);
-
-  return res.status(201).json(mapProject(project));
 });
 
-router.post("/:id/join", requireAuth, (req, res) => {
-  const projectId = Number(req.params.id);
+/**
+ * GET /api/projects/:id
+ * Gibt ein einzelnes Projekt mit Tasks und Mitgliedern zurück.
+ */
+router.get("/:id", async (req, res) => {
+  try {
+    const projectId = Number(req.params.id);
 
-  const project = db.prepare("SELECT id FROM projects WHERE id = ?").get(projectId);
+    if (!Number.isInteger(projectId)) {
+      return res.status(400).json({
+        message: "Ungültige Projekt-ID.",
+      });
+    }
 
-  if (!project) {
-    return res.status(404).json({ message: "Projekt nicht gefunden." });
+    const project = await prisma.project.findUnique({
+      where: {
+        id: projectId,
+      },
+      include: {
+        members: {
+          include: {
+            user: true,
+          },
+        },
+        tasks: {
+          orderBy: {
+            id: "desc",
+          },
+        },
+      },
+    });
+
+    if (!project) {
+      return res.status(404).json({
+        message: "Projekt nicht gefunden.",
+      });
+    }
+
+    return res.json({
+      project: mapProject(project),
+      tasks: project.tasks.map(mapTask),
+      members: project.members
+        .map((membership) => mapMember(membership.user))
+        .sort((first, second) =>
+          first.name.localeCompare(second.name, "de")
+        ),
+    });
+  } catch (error) {
+    console.error("Fehler beim Laden des Projekts:", error);
+
+    return res.status(500).json({
+      message: "Projekt konnte nicht geladen werden.",
+    });
   }
-
-  db.prepare(
-    `
-    INSERT OR IGNORE INTO project_members (project_id, user_id)
-    VALUES (?, ?)
-  `
-  ).run(projectId, req.user.id);
-
-  return res.json({ message: "Projektbeitritt erfolgreich." });
 });
 
-router.post("/:id/leave", requireAuth, (req, res) => {
-  const projectId = Number(req.params.id);
+/**
+ * POST /api/projects
+ * Erstellt ein Projekt und trägt den eingeloggten Benutzer als Mitglied ein.
+ */
+router.post("/", requireAuth, async (req, res) => {
+  try {
+    const { name, status } = req.body;
 
-  db.prepare(
-    `
-    DELETE FROM project_members
-    WHERE project_id = ? AND user_id = ?
-  `
-  ).run(projectId, req.user.id);
+    const cleanName = typeof name === "string" ? name.trim() : "";
+    const cleanStatus = typeof status === "string" ? status.trim() : "";
 
-  db.prepare(
-    `
-    UPDATE tasks
-    SET status = 'open', assigned_to_user_id = NULL
-    WHERE project_id = ?
-      AND assigned_to_user_id = ?
-      AND status != 'done'
-  `
-  ).run(projectId, req.user.id);
+    if (!cleanName || !cleanStatus) {
+      return res.status(400).json({
+        message: "Name und Status sind Pflicht.",
+      });
+    }
 
-  updateProjectProgress(projectId);
+    const xpReward = cleanStatus === "done" ? 120 : 60;
+    const progress = cleanStatus === "done" ? 100 : 0;
 
-  return res.json({ message: "Projekt verlassen." });
+    const project = await prisma.project.create({
+      data: {
+        name: cleanName,
+        status: cleanStatus,
+        progress,
+        xpReward,
+        members: {
+          create: {
+            userId: req.user.id,
+          },
+        },
+      },
+      include: {
+        members: {
+          select: {
+            userId: true,
+          },
+        },
+      },
+    });
+
+    return res.status(201).json(mapProject(project));
+  } catch (error) {
+    console.error("Fehler beim Erstellen des Projekts:", error);
+
+    return res.status(500).json({
+      message: "Projekt konnte nicht erstellt werden.",
+    });
+  }
+});
+
+/**
+ * POST /api/projects/:id/join
+ * Fügt den eingeloggten Benutzer einem Projekt hinzu.
+ */
+router.post("/:id/join", requireAuth, async (req, res) => {
+  try {
+    const projectId = Number(req.params.id);
+
+    if (!Number.isInteger(projectId)) {
+      return res.status(400).json({
+        message: "Ungültige Projekt-ID.",
+      });
+    }
+
+    const project = await prisma.project.findUnique({
+      where: {
+        id: projectId,
+      },
+      select: {
+        id: true,
+      },
+    });
+
+    if (!project) {
+      return res.status(404).json({
+        message: "Projekt nicht gefunden.",
+      });
+    }
+
+    await prisma.projectMember.upsert({
+      where: {
+        projectId_userId: {
+          projectId,
+          userId: req.user.id,
+        },
+      },
+      update: {},
+      create: {
+        projectId,
+        userId: req.user.id,
+      },
+    });
+
+    return res.json({
+      message: "Projektbeitritt erfolgreich.",
+    });
+  } catch (error) {
+    console.error("Fehler beim Projektbeitritt:", error);
+
+    return res.status(500).json({
+      message: "Projektbeitritt fehlgeschlagen.",
+    });
+  }
+});
+
+/**
+ * POST /api/projects/:id/leave
+ * Entfernt den eingeloggten Benutzer aus einem Projekt.
+ */
+router.post("/:id/leave", requireAuth, async (req, res) => {
+  try {
+    const projectId = Number(req.params.id);
+
+    if (!Number.isInteger(projectId)) {
+      return res.status(400).json({
+        message: "Ungültige Projekt-ID.",
+      });
+    }
+
+    const project = await prisma.project.findUnique({
+      where: {
+        id: projectId,
+      },
+      select: {
+        id: true,
+      },
+    });
+
+    if (!project) {
+      return res.status(404).json({
+        message: "Projekt nicht gefunden.",
+      });
+    }
+
+    await prisma.$transaction(async (transaction) => {
+      await transaction.projectMember.deleteMany({
+        where: {
+          projectId,
+          userId: req.user.id,
+        },
+      });
+
+      await transaction.task.updateMany({
+        where: {
+          projectId,
+          assignedToUserId: req.user.id,
+          status: {
+            not: "done",
+          },
+        },
+        data: {
+          status: "open",
+          assignedToUserId: null,
+        },
+      });
+
+      await updateProjectProgress(projectId, transaction);
+    });
+
+    return res.json({
+      message: "Projekt verlassen.",
+    });
+  } catch (error) {
+    console.error("Fehler beim Verlassen des Projekts:", error);
+
+    return res.status(500).json({
+      message: "Projekt konnte nicht verlassen werden.",
+    });
+  }
 });
 
 module.exports = router;
