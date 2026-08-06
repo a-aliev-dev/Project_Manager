@@ -24,6 +24,7 @@ dist-ssr
 *.sw?
 .vite/ 
 .env
+server/db/*vor-demo*.sqlite
 server/db/*Kopie*.sqlite
 
 /src/generated/prisma
