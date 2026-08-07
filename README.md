@@ -16,6 +16,14 @@ Die Anwendung wurde in M1 als statischer HTML/CSS-Prototyp begonnen, in M2 zu ei
 
 ---
 
+## Demo-Video
+
+Das Demo-Video der Anwendung ist hier verfügbar:
+
+[QuestBoard – Demo-Video]  https://www.youtube.com/watch?v=VNv5KePqm4w
+
+---
+
 ## Aktueller Stand
 
 QuestBoard besteht aktuell aus:
@@ -363,4 +371,4 @@ QuestBoard erfüllt in M3 die zentralen Anforderungen durch:
 * globalen Auth-State mit React Context
 * Lade- und Fehlerzustände
 * dynamisches Leaderboard
-* API-Tests mit Vitest/Supertest
+* API-Tests mit Vitest/Supertestq
